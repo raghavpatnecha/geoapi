@@ -86,7 +86,7 @@ def alchemyencoder(obj):
 
 @app.route('/')
 def index():
-    #users = User.query.all()
+    users = User.query.all()
     # users = db.session.query(User).from_statement(text(
     #     '''SELECT key, place_name FROM Public."In" WHERE earth_box(ll_to_earth(28.616700,77.216700), 5000) @> ll_to_earth(latitude, longitude);''')).all()
     #
