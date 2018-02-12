@@ -1,7 +1,7 @@
 from flask import Flask,request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from sqlalchemy import Column, VARCHAR, NUMERIC, text, func
+from sqlalchemy import Column, VARCHAR, NUMERIC, text, func, BIGINT, TEXT, JSON
 import decimal
 import json, datetime
 from operator import is_not
@@ -44,6 +44,32 @@ class User(db.Model):
         """"""
         return "<User - '%s': '%s' - '%s'>" % (self.key, self.place_name,
                                                  self.admin_name1)
+
+
+
+class Places(db.Model):
+
+    __tablename__ = 'locations'
+
+    gid = Column(BIGINT , primary_key=True)
+    geom = Column(TEXT)
+    properties = Column(JSON(100))
+
+
+    def __init__(self, gid , geom, properties):
+        self.gid = gid
+        self.geom = geom
+        self.properties = properties
+
+
+    def __repr__(self):
+
+        return "<Places - '%s'>" % (self.properties)
+
+
+class UserSchem(ma.ModelSchema):
+    class Meta:
+        model = Places
 
 
 class UserSchema(ma.ModelSchema):
@@ -173,6 +199,25 @@ def get_location():
     output = user_schema.dump(result).data
     print output
     output = json.dumps({'user': output}, default=alchemyencoder)
+    j = output.replace('"[', '[').replace(']"', ']')
+
+    return (json.dumps(json.loads(j), indent=2))
+
+
+@app.route('/get_geo')
+def geoj():
+    lat = 28.616700
+    lon = 77.216700
+    Point = 'POINT('+ str(lon) + ' ' +str(lat) + ')'
+    #print Point
+    #Point = 'POINT(77.216700 28.616700)'
+    query = db.session.query(Places.properties).filter(func.ST_Contains(Places.geom, Point)).all()
+    print query
+    user_schema = UserSchem(many=True)
+    print user_schema
+    output = user_schema.dump(query).data
+    print output
+    output = json.dumps({'result': output}, default=alchemyencoder)
     j = output.replace('"[', '[').replace(']"', ']')
 
     return (json.dumps(json.loads(j), indent=2))
