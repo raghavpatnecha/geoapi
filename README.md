@@ -23,9 +23,11 @@
     
   5.) There is a location table in the PostgreSQL database which has the parsed geoJSON data which is inserted in database with the help of Postgis.
      <img src="https://github.com/raghavpatnecha/apitest/blob/master/screens/geo_2_post.png">
+     <img src="https://github.com/raghavpatnecha/apitest/blob/master/screens/get_geo.png">
+     
      
      
   ### TODO
   * Write Test cases using framework to test all three APIs.
   * Put validation in the `post_location` to avoid multiple insertions of same data.
-  * Pass lat/long to the location table to check in which location a point is falling.
+  
