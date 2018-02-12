@@ -7,6 +7,7 @@ import json, datetime
 from operator import is_not
 from functools import partial
 from math import radians, cos, sin, asin, sqrt
+from sqlalchemy import exc
 
 
 app = Flask(__name__)
@@ -86,7 +87,8 @@ def alchemyencoder(obj):
 
 @app.route('/')
 def index():
-    users = User.query.all()
+    #users = User.query.all()
+    pass
     # users = db.session.query(User).from_statement(text(
     #     '''SELECT key, place_name FROM Public."In" WHERE earth_box(ll_to_earth(28.616700,77.216700), 5000) @> ll_to_earth(latitude, longitude);''')).all()
     #
@@ -104,9 +106,12 @@ def index():
 def post_location():
     user = User(request.json['key'], request.json['place_name'], request.json['admin_name1'],
                   request.json['latitude'], request.json['longitude'])
-    db.session.add(user)
-    db.session.commit()
-    #print user.key
+    try:
+        db.session.add(user)
+        db.session.commit()
+        # print user.key
+    except exc.SQLAlchemyError:
+        return "Pincode already exists"
 
     new_framework = db.session.query(User).filter_by(key =user.key, place_name = user.place_name, admin_name1 = user.admin_name1 ).all()
     user_schema = UserSchema(many= True)
