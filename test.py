@@ -87,17 +87,17 @@ def alchemyencoder(obj):
 @app.route('/')
 def index():
     #users = User.query.all()
-    users = db.session.query(User).from_statement(text(
-        '''SELECT key, place_name FROM Public."In" WHERE earth_box(ll_to_earth(28.616700,77.216700), 5000) @> ll_to_earth(latitude, longitude);''')).all()
-
-    user_schema = UserSchema(many = True)
-    print user_schema
-    output = user_schema.dump(users).data
-    print output
-    output = json.dumps({'user': output}, default=alchemyencoder)
-    j = output.replace('"[', '[').replace(']"', ']')
-
-    return (json.dumps(json.loads(j), indent=2))
+    # users = db.session.query(User).from_statement(text(
+    #     '''SELECT key, place_name FROM Public."In" WHERE earth_box(ll_to_earth(28.616700,77.216700), 5000) @> ll_to_earth(latitude, longitude);''')).all()
+    #
+    # user_schema = UserSchema(many = True)
+    # print user_schema
+    # output = user_schema.dump(users).data
+    # print output
+    # output = json.dumps({'user': output}, default=alchemyencoder)
+    # j = output.replace('"[', '[').replace(']"', ']')
+    #
+    # return (json.dumps(json.loads(j), indent=2))
 
 
 @app.route('/post_location', methods = ['POST'])
@@ -122,8 +122,8 @@ def post_location():
 @app.route('/get_using_self',methods = ['GET'])
 def distance():
     q = db.session.query(User.key, User.place_name, User.latitude, User.longitude).all()
-    lat1 = 28.616700
-    lon1 = 77.216700
+    lat1 =  float(request.args.get('latitude'))                     #28.616700
+    lon1 =  float(request.args.get('longitude'))                      #77.216700
     lat = []
     lon = []
     for i in range(len(q)):
@@ -185,8 +185,9 @@ def distance():
 
 @app.route('/get_using_postgres' , methods = ['GET'])
 def get_location():
-
-    loc_amsterdam = func.earth_box(func.ll_to_earth(28.616700, 77.216700), 5000)
+    lat1 = float(request.args.get('latitude'))  # 28.616700
+    lon1 = float(request.args.get('longitude')) #77.216700
+    loc_amsterdam = func.earth_box(func.ll_to_earth(lat1, lon1 ), 5000)
     loc_company = func.ll_to_earth(User.latitude, User.longitude)
     print loc_company
     result = User.query.filter(loc_amsterdam.op("@>")(loc_company))
@@ -204,10 +205,10 @@ def get_location():
     return (json.dumps(json.loads(j), indent=2))
 
 
-@app.route('/get_geo')
+@app.route('/get_geo' ,methods = ['GET'])
 def geoj():
-    lat = 28.616700
-    lon = 77.216700
+    lat = float(request.args.get('latitude'))  # 28.616700
+    lon = float(request.args.get('longitude'))  # 77.216700
     Point = 'POINT('+ str(lon) + ' ' +str(lat) + ')'
     #print Point
     #Point = 'POINT(77.216700 28.616700)'
