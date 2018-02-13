@@ -1,0 +1,29 @@
+ {
+    
+	 "name":"TestAPI",
+   "globals":{
+      "variables":{
+        "baseApiUrl":"http://127.0.0.1:5000"
+       
+      }
+   },
+	
+	
+	
+	"testSteps": [
+        {
+            "name":"Name of TestStep",
+            "apiUrl":"{baseApiUrl}/get_using_self",
+		     "headers":{
+                     "content-type":"application/json;"
+					    },
+			 "params":{
+          "latitude":28.616700,
+          "longitude":77.216700
+     }		
+						
+           
+     
+        }
+     ]
+}
