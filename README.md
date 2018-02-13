@@ -26,8 +26,14 @@
    <img src="https://github.com/raghavpatnecha/apitest/blob/master/screens/how%20to%20send%20geo%20request.png">
      
      
+  6.) Test cases is created using Restesr framework to test Rest API. Do `pip install Rester`.
+        * You can use any of the file test.json or test.yaml. 
+             `apirunner --ts=YOUR_PATH/test.json`
+                       or
+             `apirunner --ts=YOUTPATH/test.yaml`          
      
   ### TODO
-  * Write Test cases using framework to test all three APIs.
-  * Put validation in the `post_location` to avoid multiple insertions of same data.
+  * Add few test cases.
+  * Check for diiference in results in `get_using_self` and `get_using_postgres`.
+  * Check for some exception handling and Time complexities.
   
