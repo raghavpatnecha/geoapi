@@ -87,8 +87,8 @@ def alchemyencoder(obj):
 
 @app.route('/')
 def index():
-    #users = User.query.all()
     pass
+    #users = User.query.all()
     # users = db.session.query(User).from_statement(text(
     #     '''SELECT key, place_name FROM Public."In" WHERE earth_box(ll_to_earth(28.616700,77.216700), 5000) @> ll_to_earth(latitude, longitude);''')).all()
     #
@@ -127,8 +127,12 @@ def post_location():
 @app.route('/get_using_self',methods = ['GET'])
 def distance():
     q = db.session.query(User.key, User.place_name, User.latitude, User.longitude).all()
-    lat1 =  float(request.args.get('latitude'))                     #28.616700
-    lon1 =  float(request.args.get('longitude'))                      #77.216700
+    try:
+        lat1 = float(request.args.get('latitude'))  # 28.616700
+        lon1 = float(request.args.get('longitude'))  # 77.216700
+    except:
+
+        return 'Must send Latitude and Longitude'              #77.216700
     lat = []
     lon = []
     for i in range(len(q)):
@@ -190,8 +194,12 @@ def distance():
 
 @app.route('/get_using_postgres' , methods = ['GET'])
 def get_location():
-    lat1 = float(request.args.get('latitude'))  # 28.616700
-    lon1 = float(request.args.get('longitude')) #77.216700
+    try:
+        lat1 = float(request.args.get('latitude'))  # 28.616700
+        lon1 = float(request.args.get('longitude'))  # 77.216700
+    except:
+
+        return 'Must send Latitude and Longitude'
     loc_amsterdam = func.earth_box(func.ll_to_earth(lat1, lon1 ), 5000)
     loc_company = func.ll_to_earth(User.latitude, User.longitude)
     print loc_company
@@ -212,8 +220,12 @@ def get_location():
 
 @app.route('/get_geo' ,methods = ['GET'])
 def geoj():
-    lat = float(request.args.get('latitude'))  # 28.616700
-    lon = float(request.args.get('longitude'))  # 77.216700
+    try:
+        lat = float(request.args.get('latitude'))  # 28.616700
+        lon = float(request.args.get('longitude'))  # 77.216700
+    except:
+
+        return 'Must send Latitude and Longitude'
     Point = 'POINT('+ str(lon) + ' ' +str(lat) + ')'
     #print Point
     #Point = 'POINT(77.216700 28.616700)'
