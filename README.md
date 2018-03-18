@@ -1,4 +1,4 @@
-# apitest
+# Flask API to get location name using lat/long - Geolocation
 
 
 1.) Import the database in PostgreSQL
